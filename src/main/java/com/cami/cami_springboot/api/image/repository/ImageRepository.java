@@ -1,0 +1,14 @@
+package com.cami.cami_springboot.api.image.repository;
+
+import com.cami.cami_springboot.api.image.entity.Image;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/**
+ * 이미지 리포지토리
+ */
+@Repository
+public interface ImageRepository extends JpaRepository<Image, String>, ImageRepositoryCustom
+{
+}
+

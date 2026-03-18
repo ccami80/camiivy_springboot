@@ -1,0 +1,30 @@
+package com.cami.cami_springboot.api.user.response;
+
+import com.cami.cami_springboot.api.user.code.SocialProvider;
+import com.cami.cami_springboot.api.user.code.UserStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+/**
+ * 사용자 계정 목록 응답 DTO
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UsersAccountListResponse
+{
+    private String userId;
+    private SocialProvider socialProvider;
+    private String socialId;
+    private String phone;
+    private String email;
+    private String name;
+    private UserStatus status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}

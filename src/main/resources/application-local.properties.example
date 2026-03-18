@@ -1,0 +1,8 @@
+# Supabase DB 비밀번호 설정
+# 1. 이 파일을 application-local.properties로 복사
+# 2. YOUR_SUPABASE_DB_PASSWORD를 실제 비밀번호로 교체
+# 3. 실행 시: ./gradlew bootRun --args='--spring.profiles.active=local'
+#
+# 또는 환경변수만 사용: export SUPABASE_DB_PASSWORD=your-password
+
+spring.datasource.password=YOUR_SUPABASE_DB_PASSWORD
