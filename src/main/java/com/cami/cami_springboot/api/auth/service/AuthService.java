@@ -41,6 +41,12 @@ public class AuthService
     
     @Value("${app.auth.token.refresh.expiration-seconds}")
     private int refreshTokenExpirationSeconds;
+
+    @Value("${app.admin.username}")
+    private String adminUsername;
+
+    @Value("${app.admin.password}")
+    private String adminPassword;
     
     @Transactional(readOnly = true)
     public AuthDetailResponse searchAuthDetail(AuthSelectRequest request)
@@ -119,6 +125,63 @@ public class AuthService
             .build();
     }
     
+    /**
+     * 관리자 로그인 (환경설정 app.admin.username, app.admin.password 사용)
+     */
+    @Transactional
+    public LoginResponse adminLogin(String username, String password)
+    {
+        log.info("관리자 로그인 요청: username={}", username);
+        if (username == null || password == null || !username.equals(adminUsername) || !password.equals(adminPassword))
+        {
+            throw new CustomException(ErrorCode.INVALID_INPUT);
+        }
+        String userId = "admin";
+        String socialProvider = "ADMIN";
+        String socialId = username;
+        deleteExistingTokens(userId, TokenType.ACCESS, "관리자 로그인으로 인한 기존 ACCESS 토큰 삭제");
+        deleteExistingTokens(userId, TokenType.REFRESH, "관리자 로그인으로 인한 기존 REFRESH 토큰 삭제");
+        String accessToken = tokenUtil.generateToken(userId, socialProvider, socialId, "ACCESS");
+        LocalDateTime accessTokenExpiresAt = LocalDateTime.now().plusSeconds(accessTokenExpirationSeconds);
+        Auth accessAuth = Auth.builder()
+            .token(accessToken)
+            .tokenType(TokenType.ACCESS)
+            .userId(userId)
+            .socialProvider(socialProvider)
+            .socialId(socialId)
+            .expiresAt(accessTokenExpiresAt)
+            .deviceInfo(null)
+            .ipAddress(null)
+            .userAgent(null)
+            .createdId("system")
+            .build();
+        String refreshToken = tokenUtil.generateToken(userId, socialProvider, socialId, "REFRESH");
+        LocalDateTime refreshTokenExpiresAt = LocalDateTime.now().plusSeconds(refreshTokenExpirationSeconds);
+        Auth refreshAuth = Auth.builder()
+            .token(refreshToken)
+            .tokenType(TokenType.REFRESH)
+            .userId(userId)
+            .socialProvider(socialProvider)
+            .socialId(socialId)
+            .expiresAt(refreshTokenExpiresAt)
+            .deviceInfo(null)
+            .ipAddress(null)
+            .userAgent(null)
+            .createdId("system")
+            .build();
+        accessAuth.addLoginHistory();
+        authRepository.save(Objects.requireNonNull(accessAuth));
+        authRepository.save(Objects.requireNonNull(refreshAuth));
+        log.info("관리자 로그인 완료: username={}", username);
+        return LoginResponse.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .tokenType("Bearer")
+            .userId(userId)
+            .message("관리자 로그인이 성공적으로 완료되었습니다")
+            .build();
+    }
+
     @Transactional
     public LoginResponse login(LoginRequest request)
     {

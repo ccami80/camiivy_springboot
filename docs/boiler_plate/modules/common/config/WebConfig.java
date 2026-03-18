@@ -80,8 +80,8 @@ public class WebConfig implements WebMvcConfigurer
                     "http://localhost:3001",    // 추가 프론트엔드 포트
                     "http://127.0.0.1:3000",   // localhost 대체
                     "http://127.0.0.1:3001",   // localhost 대체
-                    "https://withup.store",    // 프로덕션 도메인
-                    "https://www.withup.store" // 프로덕션 도메인 (www)
+                    "https://platform.store",    // 프로덕션 도메인
+                    "https://www.platform.store" // 프로덕션 도메인 (www)
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

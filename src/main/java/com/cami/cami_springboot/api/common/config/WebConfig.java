@@ -41,7 +41,13 @@ public class WebConfig implements WebMvcConfigurer
                     "/api-guest/**",         // 게스트 허용
                     "/api-logined/**",       // 로그인 필요
                     "/api-business/**",      // BUSINESS 권한 필요
-                    "/api-admin/**"          // ADMIN 권한 필요
+                    "/api-admin/**",         // ADMIN 권한 필요
+                    "/api/user/**",          // 로그인 필요
+                    "/api/cart/**",          // 로그인 필요
+                    "/api/orders/**",        // 로그인 필요
+                    "/api/partner/**",       // 파트너 권한 필요
+                    "/api/admin/**",         // 관리자 권한 필요
+                    "/api/inquiry/my"        // 로그인 필요
                 )
                 .excludePathPatterns(
                     "/swagger-ui/**",        // Swagger UI 제외
@@ -80,8 +86,8 @@ public class WebConfig implements WebMvcConfigurer
                     "http://localhost:3001",    // 추가 프론트엔드 포트
                     "http://127.0.0.1:3000",   // localhost 대체
                     "http://127.0.0.1:3001",   // localhost 대체
-                    "https://withup.store",    // 프로덕션 도메인
-                    "https://www.withup.store" // 프로덕션 도메인 (www)
+                    "https://platform.store",    // 프로덕션 도메인
+                    "https://www.platform.store" // 프로덕션 도메인 (www)
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

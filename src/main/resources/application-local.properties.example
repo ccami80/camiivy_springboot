@@ -6,3 +6,7 @@
 # 또는 환경변수만 사용: export SUPABASE_DB_PASSWORD=your-password
 
 spring.datasource.password=YOUR_SUPABASE_DB_PASSWORD
+
+# 관리자 로그인 (선택, 환경변수 권장)
+# app.admin.username=admin
+# app.admin.password=your-secure-password

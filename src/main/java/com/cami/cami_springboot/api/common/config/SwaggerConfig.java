@@ -30,8 +30,8 @@ public class SwaggerConfig
     {
         return new OpenAPI()
             .info(new Info()
-                .title("Withup API")
-                .description("Withup Spring Boot API Documentation\n\n" +
+                .title("Platform API")
+                .description("Platform Spring Boot API Documentation\n\n" +
                            "**📥 API 명세 파일**:\n" +
                            "- JSON: [/api-docs/00-all](/api-docs/00-all) (우클릭 → 다른 이름으로 저장)\n" +
                            "- YAML: [/api-docs.yaml](/api-docs.yaml) (우클릭 → 다른 이름으로 저장)\n" +
@@ -44,7 +44,7 @@ public class SwaggerConfig
                     .url("/")
                     .description("Current Server"),
                 new Server()
-                    .url("https://api.withup.store")
+                    .url("https://api.platform.store")
                     .description("Production Server"),
                 new Server()
                     .url("http://localhost:8082")

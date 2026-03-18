@@ -326,6 +326,25 @@ public class AuthController
                 .body(commonResponse);
     }
     
+    @PostMapping("/api/auth/admin-login")
+    @Operation(
+        summary = "관리자 로그인",
+        description = "환경설정(app.admin.username, app.admin.password)에 설정된 ID/비밀번호로 로그인합니다.\n\n" +
+                     "**환경변수**: ADMIN_USERNAME, ADMIN_PASSWORD (application.properties 기본값: admin, admin123!)"
+    )
+    public ResponseEntity<CommonResponse> adminLogin(@RequestBody Map<String, String> body)
+    {
+        String username = body.get("username");
+        String password = body.get("password");
+        if (username == null || password == null)
+        {
+            return ResponseEntity.badRequest().body(new CommonResponse(false, "username, password 필수", null));
+        }
+        log.info("관리자 로그인 API 호출: username={}", username);
+        LoginResponse response = authService.adminLogin(username, password);
+        return ResponseEntity.ok(new CommonResponse(true, "관리자 로그인 성공", Map.of("token", response.getAccessToken(), "userId", response.getUserId())));
+    }
+
     @GetMapping("/api/auth/validate")
     @Operation(summary = "토큰 검증", description = "토큰의 유효성을 검증합니다. (비로그인 접근 가능)")
     public ResponseEntity<CommonResponse> validateToken(
