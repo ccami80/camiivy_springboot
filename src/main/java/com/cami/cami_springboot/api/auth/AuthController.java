@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import com.cami.cami_springboot.api.user.code.SocialProvider;
 import com.cami.cami_springboot.api.auth.response.KakaoUserInfoResponse;
+import com.cami.cami_springboot.api.auth.response.GoogleUserInfoResponse;
 
 import java.util.Map;
 
@@ -101,8 +102,9 @@ public class AuthController
         }
         else if ("google".equals(provider))
         {
-            // Google: AuthService.googleLogin(), GoogleUserInfoResponse 구현 필요 (src/.../api/auth 참고)
-            throw new UnsupportedOperationException("Google 로그인: AuthService.googleLogin() 구현 필요");
+            GoogleUserInfoResponse googleUserInfo = authService.googleLogin(request.code());
+            LoginRequest loginRequest = new LoginRequest(SocialProvider.GOOGLE.name(), googleUserInfo.getId(), null, null, null);
+            response = authService.login(loginRequest);
         }
         else
         {
@@ -325,7 +327,7 @@ public class AuthController
                 .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
                 .body(commonResponse);
     }
-    
+
     @PostMapping("/api/auth/admin-login")
     @Operation(
         summary = "관리자 로그인",
@@ -344,7 +346,7 @@ public class AuthController
         LoginResponse response = authService.adminLogin(username, password);
         return ResponseEntity.ok(new CommonResponse(true, "관리자 로그인 성공", Map.of("token", response.getAccessToken(), "userId", response.getUserId())));
     }
-
+    
     @GetMapping("/api/auth/validate")
     @Operation(summary = "토큰 검증", description = "토큰의 유효성을 검증합니다. (비로그인 접근 가능)")
     public ResponseEntity<CommonResponse> validateToken(

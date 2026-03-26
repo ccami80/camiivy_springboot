@@ -133,7 +133,7 @@ function handleKakaoLogin() {
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-const API_BASE_URL = 'http://localhost:8080';  // 백엔드 URL
+const API_BASE_URL = 'http://localhost:8082';  // 백엔드 URL
 
 export default function KakaoCallback() {
   const [searchParams] = useSearchParams();

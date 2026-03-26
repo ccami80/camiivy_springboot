@@ -26,13 +26,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.cami.cami_springboot.api.user.request.UsersAccountGoogleCreateRequest;
 import com.cami.cami_springboot.api.user.request.UsersAccountKakaoCreateRequest;
 import com.cami.cami_springboot.api.auth.service.AuthCallService;
 import com.cami.cami_springboot.api.auth.response.GoogleTokenResponse;
 import com.cami.cami_springboot.api.auth.response.GoogleUserInfoResponse;
 import com.cami.cami_springboot.api.auth.response.KakaoTokenResponse;
 import com.cami.cami_springboot.api.auth.response.KakaoUserInfoResponse;
+import com.cami.cami_springboot.api.user.request.UsersAccountGoogleCreateRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -170,8 +170,9 @@ public class UserService
     }
 
     @Transactional
-    public UserAccount userSignInGoogle(UsersAccountGoogleCreateRequest request) {
-        log.info("Google 회원가입 요청: phone={}, code={}", request.phone(), request.code());
+    public UserAccount userSignInGoogle(UsersAccountGoogleCreateRequest request)
+    {
+        log.info("구글 회원가입 요청: phone={}, code present={}", request.phone(), request.code() != null);
 
         GoogleTokenResponse googleTokenResponse = authCallService.getGoogleAccessToken(request.code());
         log.info("Google 액세스 토큰 발급 완료");
@@ -187,12 +188,12 @@ public class UserService
 
         UserAccount userAccount = userSignIn(accountRequest);
 
-        log.info("Google 회원가입 완료: userId={}, socialId={}",
-            userAccount.getUserId(), userAccount.getSocialId());
+        log.info("구글 회원가입 완료: userId={}, socialId={}",
+                userAccount.getUserId(), userAccount.getSocialId());
 
         return userAccount;
     }
-
+    
     /**
      * 계정 존재 확인
      * 

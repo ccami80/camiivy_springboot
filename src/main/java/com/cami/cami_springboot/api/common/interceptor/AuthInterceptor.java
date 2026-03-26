@@ -88,22 +88,10 @@ public class AuthInterceptor implements HandlerInterceptor
             return true;
         }
         
-        // 게스트 API 경로는 통과 (/api-guest/)
-        if (requestURI.startsWith("/api-guest/"))
+        // 게스트 API 경로는 통과 (/api-guest/ 또는 /api/로 시작하는 경로)
+        if (requestURI.startsWith("/api-guest/")||requestURI.startsWith("/api/")) 
         {
-            log.debug("AuthInterceptor - Guest path, allowing: {}", requestURI);
-            return true;
-        }
-        
-        // 로그인 필요한 /api/ 하위 경로 (Bearer 토큰 필수)
-        if (requiresAuth(requestURI, request.getMethod()))
-        {
-            // 아래에서 isLogined 체크 후 통과 또는 예외
-        }
-        else if (requestURI.startsWith("/api/"))
-        {
-            // 공개 API (categories, brands, products, banners, auth 등)
-            log.debug("AuthInterceptor - Public API path, allowing: {}", requestURI);
+            log.debug("AuthInterceptor - Public path, allowing: {}", requestURI);
             return true;
         }
 
@@ -253,15 +241,19 @@ public class AuthInterceptor implements HandlerInterceptor
         
         if (isLogined) 
         {
-            // 관리자 API(/api/admin/)는 userId=admin 또는 socialProvider=ADMIN만 접근 가능
-            if (requestURI.startsWith("/api/admin/"))
+            // 로그인이 필요한 API 경로인지 확인 (/api-logined/)
+            if (requestURI.startsWith("/api-logined/")) 
             {
-                String reqUserId = (String) request.getAttribute("userId");
-                String reqSocialProvider = (String) request.getAttribute("socialProvider");
-                if (!"admin".equals(reqUserId) && !"ADMIN".equals(reqSocialProvider))
-                {
-                    throw new CustomException(ErrorCode.FORBIDDEN);
-                }
+            }
+            
+            // 비즈니스 권한이 필요한 API 경로인지 확인 (/api-business/)
+            if (requestURI.startsWith("/api-business/")) 
+            {
+            }
+            
+            // 관리자 권한이 필요한 API 경로인지 확인 (/api-admin/)
+            if (requestURI.startsWith("/api-admin/")) 
+            {
             }
         }
         else
@@ -274,24 +266,6 @@ public class AuthInterceptor implements HandlerInterceptor
         return true;
     }
     
-    /**
-     * 로그인(인증)이 필요한 API 경로인지 확인
-     */
-    private boolean requiresAuth(String requestURI, String method)
-    {
-        if ("POST".equals(method) && "/api/orders".equals(requestURI)) return false; // guest checkout
-        if ("GET".equals(method) && requestURI.startsWith("/api/orders/lookup")) return false; // order lookup by number+phone
-        return requestURI.startsWith("/api/user/") ||
-               requestURI.startsWith("/api/cart") ||
-               requestURI.startsWith("/api/orders") ||
-               requestURI.startsWith("/api/partner/") ||
-               requestURI.startsWith("/api/admin/") ||
-               requestURI.equals("/api/inquiry/my") ||
-               requestURI.startsWith("/api-logined/") ||
-               requestURI.startsWith("/api-business/") ||
-               requestURI.startsWith("/api-admin/");
-    }
-
     /**
      * Swagger 관련 경로인지 확인
      */

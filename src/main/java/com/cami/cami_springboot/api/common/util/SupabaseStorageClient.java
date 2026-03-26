@@ -196,7 +196,7 @@ public class SupabaseStorageClient
             
             Map<String, Object> response = webClient.post()
                 .uri("/storage/v1/object/sign/" + 
-                    publicBucketName + "/" + 
+                    privateBucketName + "/" + 
                     storagePath)
                 .contentType(Objects.requireNonNull(MediaType.APPLICATION_JSON))
                 .bodyValue(Objects.requireNonNull(requestBody))

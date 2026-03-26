@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 public class AppProperties
 {
     private Auth auth = new Auth();
-    private Admin admin = new Admin();
     private Kakao kakao = new Kakao();
     private Frontend frontend = new Frontend();
     private Supabase supabase = new Supabase();
@@ -70,15 +69,6 @@ public class AppProperties
         }
     }
     
-    @Data
-    public static class Admin
-    {
-        /** 관리자 로그인 ID (환경변수 설정) */
-        private String username;
-        /** 관리자 로그인 비밀번호 (환경변수 설정) */
-        private String password;
-    }
-
     @Data
     public static class Kakao
     {

@@ -124,7 +124,7 @@ public class AuthService
             .message("인증 토큰이 성공적으로 삭제되었습니다")
             .build();
     }
-    
+
     /**
      * 관리자 로그인 (환경설정 app.admin.username, app.admin.password 사용)
      */
@@ -181,7 +181,7 @@ public class AuthService
             .message("관리자 로그인이 성공적으로 완료되었습니다")
             .build();
     }
-
+    
     @Transactional
     public LoginResponse login(LoginRequest request)
     {
@@ -327,6 +327,14 @@ public class AuthService
         KakaoUserInfoResponse kakaoUserInfo = authCallService.getKakaoUserInfo(kakaoTokenResponse.getAccessToken());
         
         return kakaoUserInfo;
+    }
+
+    @Transactional
+    public GoogleUserInfoResponse googleLogin(String authorizationCode)
+    {
+        log.info("Google 로그인 요청");
+        GoogleTokenResponse googleTokenResponse = authCallService.getGoogleAccessToken(authorizationCode);
+        return authCallService.getGoogleUserInfo(googleTokenResponse.getAccessToken());
     }
     
     @Transactional
